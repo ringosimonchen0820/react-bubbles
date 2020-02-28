@@ -3,3 +3,8 @@
 
 2.  What steps can you take in your web apps to keep your data secure?
     "Protected Routes", private routes that require a certain key i.e. Username and password in order to recieve a "token" that will allow them to access secured data.
+
+3.  Describe how web servers work.
+    Servers are used to store data from websites. When your site or data resources are stored on a server that server connects to the internet where your data will have it's own address or URL, when giving your server the url you are telling it to retrieve the data and resources connected to that address.
+
+4.  
