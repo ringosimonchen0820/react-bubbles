@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { axiosWithAuth } from "../utils/axiosWithAuth";
+
 
 const initialColor = {
   color: "",
@@ -7,7 +9,7 @@ const initialColor = {
 };
 
 const ColorList = ({ colors, updateColors }) => {
-  console.log(colors);
+  console.log('this is colors', colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
 
@@ -15,17 +17,36 @@ const ColorList = ({ colors, updateColors }) => {
     setEditing(true);
     setColorToEdit(color);
   };
-
+  // console.log('this is color outside save', color)
   const saveEdit = e => {
-    e.preventDefault();
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
-  };
-
+    // console.log('This is save edit colors',colors)
+    // console.log('this is color', color)
+    axiosWithAuth().put(`/api/colors/${colorToEdit.id}`, colorToEdit)
+    .then(res => {
+      // props.history.push(`/movies/${colors.id}`);
+      console.log('res inside save edit',res)
+      setColorToEdit(res.data)
+    })
+  }
+  const addColor = e => {
+    axiosWithAuth().post('/api/colors', colorToEdit)
+    .then(res=> console.log(res))
+  }
+  console.log('this is color to edit', colorToEdit)
+  // console.log('this is props', props)
   const deleteColor = color => {
-    // make a delete request to delete this color
-  };
+    console.log('this is colar in delete', color)
+    axiosWithAuth().delete(`/api/colors/${color.id}`)
+    .then(res => {
+      // props.history.push('bubblePage')
+    })
+  }
+  const handlechanges = e => {
+    setColorToEdit({...colorToEdit, [e.target.name]: e.target.value})
+}
 
   return (
     <div className="colors-wrap">
@@ -81,7 +102,23 @@ const ColorList = ({ colors, updateColors }) => {
         </form>
       )}
       <div className="spacer" />
-      {/* stretch - build another form here to add a color */}
+      <form onSubmit={addColor}>
+        <input
+          type='text'
+          placeholder='color'
+          name='color'
+          onChange={handlechanges}
+          value={colorToEdit.color}
+        />
+        <input
+          type='text'
+          placeholder='color-code'
+          name='code'
+          onChange={handlechanges}
+          value={colorToEdit.code.hex}
+        />
+        <button>Submit</button>
+      </form>
     </div>
   );
 };
