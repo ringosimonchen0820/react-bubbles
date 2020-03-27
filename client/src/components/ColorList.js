@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { axiosWithAuth } from "../utils/axiosWithAuth";
 
 const initialColor = {
   color: "",
   code: { hex: "" }
 };
 
-const ColorList = ({ colors, updateColors }) => {
+const ColorList = ({ colors, updateColors}) => {
   console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
@@ -18,13 +18,38 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-    // Make a put request to save your updated color
-    // think about where will you get the id from...
-    // where is is saved right now?
+    //? Make a put request to save your updated color
+    //? think about where will you get the id from...
+    //? where is is saved right now?
+    console.log('This is saved edit colors', colors);
+    axiosWithAuth()
+      .put(`/api/colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => {
+        console.log('inside save edit', res)
+        setColorToEdit(res.data)
+      })
   };
 
   const deleteColor = color => {
     // make a delete request to delete this color
+    console.log('This is color to delete', color);
+    axiosWithAuth()
+      .delete(`/api/colors/${color.id}`)
+      .then(res => {
+        console.log(res)
+      })
+  };
+
+  const handlechanges = e => {
+    setColorToEdit({...colorToEdit, [e.target.name]: e.target.value})
+  };
+
+  const addColor = e => {
+    axiosWithAuth()
+      .post('/api/colors', colorToEdit)
+      .then(res => {
+        console.log(res)
+      })
   };
 
   return (
@@ -80,8 +105,34 @@ const ColorList = ({ colors, updateColors }) => {
           </div>
         </form>
       )}
-      <div className="spacer" />
+      {/* <div className="spacer" /> */}
       {/* stretch - build another form here to add a color */}
+      <form onSubmit={addColor}>
+      <legend>add color</legend>
+        <label>
+          color name :
+          <input
+            type='text'
+            placeholder='color'
+            name='color'
+            onChange={handlechanges}
+            value={colorToEdit.color}
+          />
+        </label>
+        <label>
+          hex code:
+          <input
+            type='text'
+            placeholder='hex code'
+            name='code'
+            onChange={handlechanges}
+            value={colorToEdit.code.hex}
+          />
+        </label>
+        <div className="button-row">
+            <button>add</button>
+        </div>
+      </form>
     </div>
   );
 };
