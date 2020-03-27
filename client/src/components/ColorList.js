@@ -6,7 +6,7 @@ const initialColor = {
   code: { hex: "" }
 };
 
-const ColorList = ({ colors, updateColors }) => {
+const ColorList = ({ colors, updateColors}) => {
   console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
@@ -22,7 +22,6 @@ const ColorList = ({ colors, updateColors }) => {
     //? think about where will you get the id from...
     //? where is is saved right now?
     console.log('This is saved edit colors', colors);
-    console.log('This is color', color);
     axiosWithAuth()
       .put(`/api/colors/${colorToEdit.id}`, colorToEdit)
       .then(res => {
@@ -106,24 +105,33 @@ const ColorList = ({ colors, updateColors }) => {
           </div>
         </form>
       )}
-      <div className="spacer" />
+      {/* <div className="spacer" /> */}
       {/* stretch - build another form here to add a color */}
       <form onSubmit={addColor}>
-        <input
-          type='text'
-          placeholder='color'
-          name='color'
-          onChange={handlechanges}
-          value={colorToEdit.color}
-        />
-        <input
-          type='text'
-          placeholder='color-code'
-          name='code'
-          onChange={handlechanges}
-          value={colorToEdit.code.hex}
-        />
-        <button>Submit</button>
+      <legend>add color</legend>
+        <label>
+          color name :
+          <input
+            type='text'
+            placeholder='color'
+            name='color'
+            onChange={handlechanges}
+            value={colorToEdit.color}
+          />
+        </label>
+        <label>
+          hex code:
+          <input
+            type='text'
+            placeholder='hex code'
+            name='code'
+            onChange={handlechanges}
+            value={colorToEdit.code.hex}
+          />
+        </label>
+        <div className="button-row">
+            <button>add</button>
+        </div>
       </form>
     </div>
   );
